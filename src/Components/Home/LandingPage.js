@@ -17,7 +17,7 @@ const LandingPage = () => {
     useEffect(() => {
         const fetchItems = async () => {
             try {
-                const response = await axios.get('https://api.soundstud.io/api/items'); // Fetch items from API
+                const response = await axios.get('/api/items'); // Fetch items from API
                 setItems(response.data); // Set fetched items
             } catch (error) {
                 console.error('Error fetching items:', error);
@@ -59,7 +59,7 @@ const LandingPage = () => {
                             >
                                 <div className={`h-[160px] ${currentModeStyles.cardBg} flex items-center justify-center overflow-hidden`}>
                                     <img
-                                        src={`http://localhost/storage/${ItemDetails.img}`} // Ensure that the correct path is used for the image
+                                        src={`http://localhost:8000/storage/${ItemDetails.img}`} // Ensure that the correct path is used for the image
                                         alt={ItemDetails.name}
                                         className="h-[140px] object-cover transition-transform duration-300 hover:scale-110"
                                     />

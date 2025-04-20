@@ -11,8 +11,6 @@ const Register = () => {
     const navigate = useNavigate();
 
     const handleRegister = async () => {
-        // Get CSRF token from meta tag
-        // const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
 
         // Check for empty fields
         if (!name) {
@@ -47,22 +45,17 @@ const Register = () => {
 
         try {
             // Get CSRF cookie for Sanctum
-            await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie', { withCredentials: true });
-
+            await axios.get('/sanctum/csrf-cookie', {
+                withCredentials: true
+            });
             // Register the user
             const registerResponse = await axios.post(
-                'http://127.0.0.1:8000/register',
+                '/register',
                 {
                     name,
                     email,
                     password,
                     password_confirmation: confirmPassword
-                },
-                {
-                    headers: {
-                        // 'X-CSRF-TOKEN': csrfToken, // Attach CSRF token to the headers
-                    },
-                    withCredentials: true // Include cookies with the request
                 }
             );
 

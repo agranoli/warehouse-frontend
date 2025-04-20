@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';  // Import Link for navigation
 import Sidebar from "../CommonUI/Sidebar";
-import eventData from '../../data/Planned.json';
 import { darkModeStyles, lightModeStyles } from "../utils/Themes";
 
 const EventCalendar = () => {
@@ -28,18 +27,18 @@ const EventCalendar = () => {
         'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'
     ];
 
-    useEffect(() => {
-        try {
-            if (Array.isArray(eventData)) {
-                setEvents(eventData);
-            } else {
-                throw new Error('Event data is not in the correct format');
-            }
-        } catch (err) {
-            console.error('Error loading event data:', err);
-            setError('Failed to load event data. Please check the data format.');
-        }
-    }, []);
+    // useEffect(() => {
+    //     try {
+    //         if (Array.isArray(eventData)) {
+    //             setEvents(eventData);
+    //         } else {
+    //             throw new Error('Event data is not in the correct format');
+    //         }
+    //     } catch (err) {
+    //         console.error('Error loading event data:', err);
+    //         setError('Failed to load event data. Please check the data format.');
+    //     }
+    // }, []);
 
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -67,16 +66,16 @@ const EventCalendar = () => {
             return currentDateObj >= startDate && currentDateObj <= endDate;
         });
 
-        return dayEvents.map((event, index) => (
-            <Link  // Wrap event in Link to navigate to EventDetails
-                to={`/event/${event.id}`}  // Navigate to EventDetails page by event id
-                key={`${event.id}-${index}`}
-                className={`absolute left-0 right-0 h-5 ${getEventColor(event.id)} text-xs text-white truncate px-1`}
-                style={{ top: `${index * 20 + 25}px` }}
-            >
-                {event.name}
-            </Link>
-        ));
+        // return dayEvents.map((event, index) => (
+        //     <Link  // Wrap event in Link to navigate to EventDetails
+        //         to={`/event/${event.id}`}  // Navigate to EventDetails page by event id
+        //         key={`${event.id}-${index}`}
+        //         className={`absolute left-0 right-0 h-5 ${getEventColor(event.id)} text-xs text-white truncate px-1`}
+        //         style={{ top: `${index * 20 + 25}px` }}
+        //     >
+        //         {event.name}
+        //     </Link>
+        // ));
     };
 
     const changeMonth = (increment) => {

@@ -16,8 +16,8 @@ const Logout = ({ hoverClass }) => {
 
     const handleLogout = async () => {
         try {
-            await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie', { withCredentials: true });
-            await axios.post('http://127.0.0.1:8000/api/logout', {}, { withCredentials: true });
+            await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+            await axios.post('/logout', {}, { withCredentials: true });
             localStorage.removeItem('isLoggedIn');
             navigate('/login');
         } catch (error) {

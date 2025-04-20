@@ -20,7 +20,7 @@ const Categories = () => {
 
     // Fetch categories and items when the component loads
     useEffect(() => {
-        axios.get('https://api.soundstud.io/api/categories')
+        axios.get('/api/categories')
             .then(response => {
                 setCategories(response.data);
             })
@@ -28,7 +28,7 @@ const Categories = () => {
                 console.error("There was an error fetching the categories!", error);
             });
 
-        axios.get('http://localhost/api/items')  // Adjust endpoint as needed
+        axios.get('/api/items')  // Adjust endpoint as needed
             .then(response => {
                 setItems(response.data); // Store all items for filtering
             })
@@ -45,7 +45,7 @@ const Categories = () => {
 
     const handleSave = () => {
         // Save category via API
-        axios.post('http://localhost/api/categories', { name: categoryName })
+        axios.post('/api/categories', { name: categoryName })
             .then(response => {
                 setCategories([...categories, response.data.category]);
                 setCategoryName('');  // Clear the input field
@@ -64,25 +64,18 @@ const Categories = () => {
                     <h1 className={`text-3xl font-bold mb-4 ${currentModeStyles.heading}`}>Kategorijas</h1>
                 </div>
                 <div className="w-full max-w-lg mx-auto mt-10">
-                    {/* Button to open the popup */}
                     <button
                         onClick={() => setIsPopupOpen(true)}
-                        className={`w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isDarkMode ? 'focus:ring-offset-gray-900' : 'focus:ring-offset-gray-100'}`}
-                    >
+                        className={`w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isDarkMode ? 'focus:ring-offset-gray-900' : 'focus:ring-offset-gray-100'}`}>
                         Pievienot Kategoriju
                     </button>
-
-                    {/* Display categories */}
                     {categories.map((category) => (
                         <div key={category.id} className="mb-4">
                             <button
                                 onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
-                                className={`w-full ${currentModeStyles.cardBg} ${currentModeStyles.text} text-left py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-blue-500`}
-                            >
+                                className={`w-full ${currentModeStyles.cardBg} ${currentModeStyles.text} text-left py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-blue-500`}>
                                 {category.name}
                             </button>
-
-                            {/* Display items if the category is expanded */}
                             {expandedCategory === category.id && (
                                 <ul className="ml-6 mt-2 flex flex-col justify-between">
                                     {items
@@ -90,21 +83,18 @@ const Categories = () => {
                                         .map(item => (
                                             <li key={item.id}
                                                 className={`flex items-center justify-start text-right text-wrap ${currentModeStyles.text} py-2 border-b border-gray-300`}>
-                                                {/* Display item photo */}
                                                 <img
-                                                    src={`http://localhost/storage/${item.img}`} // Construct the full path to the image
+                                                    src={`/storage/${item.img}`} // Construct the full path to the image
                                                     alt={item.name}
                                                     className="h-[70px] rounded-sm p-1"
                                                 />
-                                                {/* Adjust size as needed */}
-                                                <span>{item.name}</span> {/* Display item name */}
+                                                <span>{item.name}</span>
                                             </li>
                                         ))}
                                 </ul>
                             )}
                         </div>
                     ))}
-                    {/* Popup for adding a new category */}
                     {isPopupOpen && (
                         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                             <div className={`w-full max-w-md p-6 rounded-lg ${currentModeStyles.cardBg} shadow-lg`}>

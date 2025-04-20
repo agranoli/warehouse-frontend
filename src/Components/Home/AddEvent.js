@@ -63,7 +63,7 @@ export default function AddEvent() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('https://api.soundstud.io/api/users');  // Adjust API endpoint as needed
+                const response = await axios.get('/api/users');  // Adjust API endpoint as needed
                 setAllUsers(response.data);
             } catch (error) {
                 console.error('Error fetching users:', error);
@@ -164,7 +164,7 @@ export default function AddEvent() {
                         {/* Dropdown for Users */}
                         <div className="space-y-2">
                             <label htmlFor="userSelect" className={`block text-sm font-medium ${currentModeStyles.text}`}>
-                                Izvēlieties lietotājus:
+                                Izvēlieties Darbiniekus:
                             </label>
                             <select
                                 id="userSelect"

@@ -16,15 +16,6 @@ import EventDetails from "./Components/Event/EventDetails";
 import ProtectedRoute from './Components/SignUp/ProtectedRoute';
 
 function App() {
-    // useEffect(() => {
-    //     const csrfTokenMetaTag = document.querySelector('meta[name="csrf-token"]');
-    //     if (csrfTokenMetaTag) {
-    //         axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfTokenMetaTag.getAttribute('content');
-    //     } else {
-    //         console.warn('CSRF token not found!');
-    //     }
-    // }, []);
-
     return (
         <Router>
             <Routes>

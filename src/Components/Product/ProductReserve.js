@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Event from '../../data/Planned.json';
 import { darkModeStyles, lightModeStyles } from '../utils/Themes';
 
 const ProductReserve = ({ onClose, onSave }) => {

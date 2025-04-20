@@ -1,16 +1,24 @@
-import React from 'react';
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ element }) => {
-    // Check if user is logged in (e.g., check for token or user state)
-    const isAuthenticated = Boolean(localStorage.getItem('auth_token')); // Modify this as per your auth logic
+function ProtectedRoute({ element }) {
+    const [loading, setLoading] = useState(true);
+    const [authenticated, setAuthenticated] = useState(false);
 
-    if (!isAuthenticated) {
-        // Redirect if not authenticated
-        return <Navigate to="/login" />;
-    }
+    useEffect(() => {
+        axios
+            .get("/user", { withCredentials: true })
+            .then(() => {
+                setAuthenticated(true);
+                console.log("jii ha");
+            })
+            .catch(() => setAuthenticated(false))
+            .finally(() => setLoading(false));
+    }, []);
 
-    return element; // Render the protected component if authenticated
-};
+    if (loading) return <div>Loading...</div>;
 
+    return authenticated ? element : <Navigate to="/login" />;
+}
 export default ProtectedRoute;

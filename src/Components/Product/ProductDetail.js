@@ -34,7 +34,7 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`https://api.soundstud.io/api/items/${id}`);
+                const response = await axios.get(`/api/items/${id}`);
                 console.log('Fetched product:', response.data); // Check the product data structure
                 setProduct(response.data);
             } catch (error) {
@@ -72,7 +72,7 @@ const ProductDetail = () => {
                         <div className="md:w-1/3 w-full h-auto p-4 flex flex-col items-center">
                             {/* Adjust image URL based on the storage directory */}
                             <img
-                                src={`https://soundstud.io/storage/${product.img}`} // Assuming the backend stores images in 'public/storage'
+                                src={`/storage/${product.img}`} // Assuming the backend stores images in 'public/storage'
                                 alt={product.name}
                                 className="w-full h-auto rounded-sm"
                             />

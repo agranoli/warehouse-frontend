@@ -29,7 +29,7 @@ export default function AddItem() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('https://api.soundstud.io/api/categories');
+                const response = await axios.get('/api/categories');
                 setCategories(response.data);
             } catch (error) {
                 console.error('Failed to fetch categories:', error);
@@ -57,7 +57,7 @@ export default function AddItem() {
         formData.append('img', imageFile);
 
         try {
-            const response = await axios.post('http://localhost/api/items', formData, {
+            const response = await axios.post('/api/items', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

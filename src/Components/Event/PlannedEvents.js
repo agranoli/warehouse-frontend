@@ -1,9 +1,9 @@
 // PlannedEvents.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from "../CommonUI/Sidebar"; // Use Sidebar as Header
+import axios from 'axios';
+import Sidebar from "../CommonUI/Sidebar";
 import SearchBar from "../CommonUI/SearchBar";
-import PlannedEvent from "../../data/Planned.json";
 import { darkModeStyles, lightModeStyles } from '../utils/Themes';
 
 const PlannedEvents = () => {
@@ -12,6 +12,7 @@ const PlannedEvents = () => {
         return savedMode ? JSON.parse(savedMode) : true;
     });
 
+    const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,6 +24,16 @@ const PlannedEvents = () => {
     };
 
     const currentModeStyles = isDarkMode ? darkModeStyles : lightModeStyles;
+
+    useEffect(() => {
+        axios.get('/api/events')
+            .then(response => {
+                setEvents(response.data);
+            })
+            .catch(error => {
+                console.error('Kļūda ielādējot pasākumus:', error);
+            });
+    }, []);
 
     const handleEventClick = (id) => {
         navigate(`/event/${id}`);
@@ -38,7 +49,7 @@ const PlannedEvents = () => {
                 </div>
                 <div className="flex flex-col flex-grow overflow-y-auto md:p-6 p-2">
                     <div className="flex flex-wrap justify-start items-center md:gap-4 gap-1">
-                        {PlannedEvent.map((event) => (
+                        {events.map(event => (
                             <div
                                 key={event.id}
                                 className={`w-36 md:w-52 h-[240px] ${currentModeStyles.cardBg} rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl ${currentModeStyles.border} border-2 cursor-pointer`}
@@ -55,7 +66,7 @@ const PlannedEvents = () => {
                                     <p className={`font-semibold text-sm ${currentModeStyles.text} truncate tracking-tight text-wrap`}>
                                         {event.name}
                                     </p>
-                                    <p className="text-xs">
+                                    <p className="text-xs text-white">
                                         Līdz: {event.to}
                                     </p>
                                 </div>
