@@ -72,7 +72,7 @@ const ProductDetail = () => {
                         <div className="md:w-1/3 w-full h-auto p-4 flex flex-col items-center">
                             {/* Adjust image URL based on the storage directory */}
                             <img
-                                src={`/storage/${product.img}`} // Assuming the backend stores images in 'public/storage'
+                                src={`${product.img}`} // Assuming the backend stores images in 'public/storage'
                                 alt={product.name}
                                 className="w-full h-auto rounded-sm"
                             />
@@ -86,22 +86,16 @@ const ProductDetail = () => {
                         </div>
 
                         {/* Product Details */}
-                        <div
-                            className="md:w-1/3 w-full justify-between md:h-[462px] h-[400px] -mt-2 p-4 space-y-1 md:space-y-4 flex flex-col">
+                        <div className="md:w-1/3 w-full justify-between md:h-[462px] h-[400px] -mt-2 p-4 space-y-1 md:space-y-4 flex flex-col">
                             <div className="flex flex-col space-y-2">
                                 <p className={`text-4xl ${currentModeStyles.text} font-bold`}>{product.name}</p>
-                                {/* Directly display the category */}
                                 <p className={`text-base ${currentModeStyles.text}`}>
                                     {product.category ? product.category : "Kategorija netika atrasta"}
                                 </p>
                             </div>
                             <div className="flex flex-col space-y-2">
-                                <p className={`text-sm ${currentModeStyles.text}`}>Nodots īrē līdz: </p>
-                                <p className={`text-sm ${currentModeStyles.text}`}>Pieejami noliktavā: {product.available !== null ? product.available : "Not available"}</p>
-                            </div>
-                            <div className="flex flex-col space-y-2">
-                                <p className={`text-sm ${currentModeStyles.text}`}>Īrē nodevis: *vārds, uzvārds*</p>
-                                <p className={`text-sm ${currentModeStyles.text}`}>Rezervēts uz: *pasākuma nosaukums*</p>
+                                <p className={`text-sm ${currentModeStyles.text}`}>Īres cena 24h: {product.price !== null ? product.price : "Nav pieejama cena"}€</p>
+                                <p className={`text-sm ${currentModeStyles.text}`}>Pieejami noliktavā: {product.available !== null ? product.available : "Nav pieejams noliktavā"}</p>
                             </div>
 
                             {/* Action Buttons */}

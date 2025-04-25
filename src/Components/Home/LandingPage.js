@@ -59,7 +59,7 @@ const LandingPage = () => {
                             >
                                 <div className={`h-[160px] ${currentModeStyles.cardBg} flex items-center justify-center overflow-hidden`}>
                                     <img
-                                        src={`http://localhost:8000/storage/${ItemDetails.img}`} // Ensure that the correct path is used for the image
+                                        src={`${ItemDetails.img}`} // Ensure that the correct path is used for the image
                                         alt={ItemDetails.name}
                                         className="h-[140px] object-cover transition-transform duration-300 hover:scale-110"
                                     />

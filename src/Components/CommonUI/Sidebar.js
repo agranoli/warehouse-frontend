@@ -66,9 +66,9 @@ const Sidebar = ({ isDarkMode, toggleMode }) => {
                 <div className="mb-6 flex justify-center">
                     <button
                         onClick={toggleMode}
-                        className={`py-2 px-4 rounded-lg shadow-lg transition duration-300 ${isDarkMode ? 'bg-[#4C495D] text-[#E3E3E3]' : 'bg-[#802BB1] text-white'}`}
+                        className={`py-2 px-4 rounded-lg shadow-lg transition duration-300 ${isDarkMode ? 'bg-[#4C495D] text-[#E3E3E3]' : 'bg-[#a4adae] text-white'}`}
                     >
-                        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                        {isDarkMode ? 'Gaišais motīvs' : 'Tumšais motīvs'}
                     </button>
                 </div>
 
@@ -79,12 +79,6 @@ const Sidebar = ({ isDarkMode, toggleMode }) => {
                     <li>
                         <Logout hoverClass={currentModeStyles.hover}/>
                     </li>
-                    {/*<li*/}
-                    {/*    className={`absolute bottom-5 left-5 py-2 px-4 rounded-lg transition-all duration-300 ${currentModeStyles.hover}`}*/}
-                    {/*    onClick={() => navigate('/Login')}*/}
-                    {/*>*/}
-                    {/*    Mainīt kontu*/}
-                    {/*</li>*/}
                 </ul>
             </div>
 
@@ -95,14 +89,12 @@ const Sidebar = ({ isDarkMode, toggleMode }) => {
                 <div className="flex w-full h-16 items-center justify-center">
                     <img src="/images/photos/logo.png" alt="logo" className="h-16" />
                 </div>
-
-                {/* Toggle Button for Mobile */}
                 <div className="mb-6 flex justify-center">
                     <button
                         onClick={toggleMode}
                         className={`py-2 px-4 rounded-lg shadow-lg transition duration-300 ${isDarkMode ? 'bg-[#4C495D] text-[#E3E3E3]' : 'bg-[#802BB1] text-white'}`}
                     >
-                        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                        {isDarkMode ? 'Gaišais motīvs' : 'Tumšais motīvs'}
                     </button>
                 </div>
 
@@ -113,15 +105,6 @@ const Sidebar = ({ isDarkMode, toggleMode }) => {
                     <li>
                         <Logout />
                     </li>
-                    {/*<li*/}
-                    {/*    className={`absolute bottom-5 left-5 py-2 px-4 rounded-lg transition-all duration-300 ${currentModeStyles.hover}`}*/}
-                    {/*    onClick={() => {*/}
-                    {/*        navigate('/Login');*/}
-                    {/*        setIsOpen(false);*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                    {/*    Mainīt kontu*/}
-                    {/*</li>*/}
                 </ul>
             </div>
 

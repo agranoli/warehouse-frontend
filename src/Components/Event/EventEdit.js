@@ -18,13 +18,14 @@ const EventEdit = ({ event, onClose, onSave }) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setPhotoFile(file);
-        setFormData({ ...formData, img: URL.createObjectURL(file) });
-        setPreview(URL.createObjectURL(file));
+        if (file) {
+            setPreview(URL.createObjectURL(file));
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave({ ...formData, img: photoFile ? URL.createObjectURL(photoFile) : formData.img });
+        onSave({ ...formData, img: photoFile });
     };
 
     return (
@@ -63,15 +64,7 @@ const EventEdit = ({ event, onClose, onSave }) => {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium dark:text-white">Photo URL or File</label>
-                        <input
-                            type="text"
-                            name="img"
-                            value={formData.img}
-                            onChange={handleChange}
-                            placeholder="Enter URL or leave blank for file upload"
-                            className="w-full p-2 border rounded dark:bg-[#4C495D] dark:text-white"
-                        />
+                        <label className="block text-sm font-medium dark:text-white">Augšupielādēt foto</label>
                         <input
                             type="file"
                             accept="image/*"

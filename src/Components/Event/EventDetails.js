@@ -44,15 +44,14 @@ const EventDetails = () => {
     return (
         <div className={`flex min-h-screen ${currentModeStyles.background}`}>
             <Sidebar isDarkMode={isDarkMode} toggleMode={() => setIsDarkMode(!isDarkMode)} />
-            <div className={`flex flex-col flex-grow ${currentModeStyles.background} mt-16 md:ml-64 p-4 overflow-hidden`}>
+            <div className={`flex flex-col flex-grow ${currentModeStyles.background}  md:ml-64 p-4 overflow-hidden`}>
                 <div className="flex flex-col h-full items-center justify-evenly">
                     <div className={`flex flex-col justify-center items-center w-full py-8 ${currentModeStyles.cardBg} shadow-md`}>
                         <p className={`text-3xl ${currentModeStyles.text} text-center font-bold mb-4`}>Pasākuma informācija</p>
                     </div>
-
                     <div className="flex flex-col md:flex-row w-full justify-center items-center">
                         <div className="md:h-[300px] md:w-1/3 w-full p-4 flex flex-col items-center">
-                            <img src={event.img} alt={event.name} className="w-full h-auto rounded-sm" />
+                            <img src={`${event.file}`} alt={event.name} className="w-full h-auto rounded-sm" />
                             <button
                                 onClick={() => setShowEventPopup(true)}
                                 className={`w-full px-4 mt-5 py-2 ${currentModeStyles.cardAccent} text-white rounded-md hover:bg-blue-700`}

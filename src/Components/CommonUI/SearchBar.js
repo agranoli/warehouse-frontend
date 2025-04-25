@@ -37,14 +37,8 @@ const SearchBar = () => {
                         type="search"
                         id="default-search"
                         className={`block w-full p-2 ps-8 text-sm ${invertedInputBg} ${invertedTextColor} border ${currentModeStyles.border} rounded-lg ${invertedPlaceholderColor} focus:border-${currentModeStyles.border}`}
-                        placeholder="Search..."
+                        placeholder="Meklēt..."
                     />
-                    <button
-                        type="submit"
-                        className={`absolute end-2 bottom-1.5 text-xs px-3 py-1 rounded-lg font-medium ${currentModeStyles.cardBg} hover:${currentModeStyles.cardAccent}`}
-                    >
-                        Search
-                    </button>
                 </div>
             </form>
         </div>

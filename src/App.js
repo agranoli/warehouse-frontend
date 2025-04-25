@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import axios from 'axios';
 import LandingPage from "./Components/Home/LandingPage";
 import Login from "./Components/SignUp/Login";
 import Register from "./Components/SignUp/Register";

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Trash2, Pencil } from 'lucide-react';
 import axios from 'axios';  // Import Axios
 import Sidebar from "../CommonUI/Sidebar";
 import { darkModeStyles, lightModeStyles } from "../utils/Themes";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Categories = () => {
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -43,7 +46,23 @@ const Categories = () => {
 
     const currentModeStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
+    const showError = (message) => {
+        toast.error(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: isDarkMode ? "dark" : "light",
+        });
+    };
+
     const handleSave = () => {
+        if (!categoryName.trim()) {
+            showError("Lūdzu, ievadiet kategorijas nosaukumu.");
+            return;
+        }
         // Save category via API
         axios.post('/api/categories', { name: categoryName })
             .then(response => {
@@ -57,6 +76,7 @@ const Categories = () => {
     };
 
     return (
+        <>
         <div className={`min-h-screen flex ${currentModeStyles.background} text-[#D0DFE5] p-6 flex-col`}>
             <Sidebar isDarkMode={isDarkMode} toggleMode={toggleMode} />
             <div className='flex flex-col flex-grow mt-16 md:ml-64'>
@@ -73,8 +93,22 @@ const Categories = () => {
                         <div key={category.id} className="mb-4">
                             <button
                                 onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
-                                className={`w-full ${currentModeStyles.cardBg} ${currentModeStyles.text} text-left py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-blue-500`}>
+                                className={`w-full ${currentModeStyles.cardBg} ${currentModeStyles.text} text-left py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 flex justify-between items-center`}>
                                 {category.name}
+                                <div>
+                                    <button
+                                        type="button"
+                                        // onClick={handleDelete}
+                                        className="px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
+                                        <Pencil/>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        // onClick={handleDelete}
+                                        className="px-2 py-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2">
+                                        <Trash2/>
+                                    </button>
+                                </div>
                             </button>
                             {expandedCategory === category.id && (
                                 <ul className="ml-6 mt-2 flex flex-col justify-between">
@@ -127,6 +161,8 @@ const Categories = () => {
                 </div>
             </div>
         </div>
+        <ToastContainer />
+        </>
     );
 };
 

@@ -57,17 +57,21 @@ const PlannedEvents = () => {
                             >
                                 <div className={`h-[160px] ${currentModeStyles.cardBg} flex items-center justify-center overflow-hidden`}>
                                     <img
-                                        src={event.img}
+                                        src={`${event.file}`}
                                         alt={event.name}
                                         className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
                                     />
                                 </div>
-                                <div className={`h-[80px] ${currentModeStyles.cardAccent} p-3 flex flex-col justify-between`}>
+                                <div
+                                    className={`h-[80px] ${currentModeStyles.cardAccent} p-3 flex flex-col justify-between`}>
                                     <p className={`font-semibold text-sm ${currentModeStyles.text} truncate tracking-tight text-wrap`}>
                                         {event.name}
                                     </p>
                                     <p className="text-xs text-white">
-                                        Līdz: {event.to}
+                                        No: {event.date_from}
+                                    </p>
+                                    <p className="text-xs text-white">
+                                        Līdz: {event.date_to}
                                     </p>
                                 </div>
                             </div>

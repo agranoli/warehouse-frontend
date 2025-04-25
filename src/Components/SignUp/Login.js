@@ -8,23 +8,25 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [isTokenReady, setIsTokenReady] = useState(false); // State to track token readiness
+    const [isTokenReady, setIsTokenReady] = useState(false);
 
+    // Pārliecinās, ka CSRF tokens ir iestatīts pirms pieslēgšanās
     useEffect(() => {
         const fetchCsrfToken = async () => {
             try {
                 await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
-                setIsTokenReady(true); // Set token readiness to true
+                setIsTokenReady(true);
             } catch (err) {
                 console.error('Error fetching CSRF token:', err);
             }
         };
 
-        fetchCsrfToken(); // Fetch the CSRF token on component mount
+        fetchCsrfToken();
     }, []);
 
+    // Apstrādā pieslēgšanās darbību
     const handleLogin = async () => {
-        if (!isTokenReady) return; // Prevent login if token is not ready
+        if (!isTokenReady) return;
 
         try {
             const response = await axios.post('/login', {
@@ -41,7 +43,7 @@ const Login = () => {
         }
     };
 
-
+    // Pieslēgšanās forma
     return (
         <div className="w-full h-screen flex bg-[#1e1e1e] flex-col">
             <div className="h-1/5 w-full flex justify-center items-center">

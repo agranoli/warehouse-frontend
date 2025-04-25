@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ProductPopup = ({ product, onClose, onSave }) => {
+    const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
-        name: product.name,
-        category: product.category,
-        count: product.available,
-        rentPrice: product.rentPrice,
+        name: product.name || '',
+        category_id: product.category_id || '',
+        count: product.quantity ?? '', // use nullish coalescing for numbers
+        rentPrice: product.rentPrice ?? '',
     });
     const [preview, setPreview] = useState(product.img);
     const [photoFile, setPhotoFile] = useState(null);
+
+    const navigate = useNavigate();
+
+    axios.get('/api/categories')
+        .then(response => {
+            setCategories(response.data);
+        })
+        .catch(error => {
+            console.error("There was an error fetching the categories!", error);
+        });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,13 +36,59 @@ const ProductPopup = ({ product, onClose, onSave }) => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`/api/item/${product.id}`);
+            console.log('Product deleted');
+            navigate('/');
+        } catch (error) {
+            console.error('Kļūda dzēšot produktu:', error.response?.data || error);
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSave({ ...formData, photo: photoFile });
+        const updatedData = new FormData();
+
+        if (formData.name && formData.name !== product.name) {
+            updatedData.append('name', formData.name);
+        }
+
+        if (formData.category_id && formData.category_id !== product.category_id) {
+            updatedData.append('category_id', formData.category_id);
+        }
+
+        if (formData.count && formData.count !== product.quantity) {
+            updatedData.append('quantity', formData.count);
+        }
+
+        if (formData.rentPrice && formData.rentPrice !== product.rentPrice) {
+            updatedData.append('price', formData.rentPrice);
+        }
+
+        if (photoFile) {
+            updatedData.append('img', photoFile);
+        }
+
+        try {
+            const response = await axios.post(
+                `/api/items/${product.id}?_method=PUT`,
+                updatedData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            console.log('Product updated:', response.data);
+            onSave(response.data);
+        } catch (error) {
+            console.error('Kļūda saglabājot produktu:', error.response?.data || error);
+        }
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center md:justify-end lg:justify-center bg-black bg-opacity-50">
             <div className="bg-white dark:bg-[#2D283E] rounded-lg p-6 w-[90%] md:w-[50%] max-w-lg space-y-4">
                 <h2 className="text-2xl font-bold mb-4 text-center text-[#2D283E] dark:text-white">Rediģēt produkta informāciju</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -45,13 +104,19 @@ const ProductPopup = ({ product, onClose, onSave }) => {
                     </div>
                     <div>
                         <label className="block text-sm font-medium dark:text-white">Kategorija</label>
-                        <input
-                            type="text"
-                            name="category"
-                            value={formData.category}
+                        <select
+                            name="category_id"
+                            value={formData.category_id}
                             onChange={handleChange}
-                            className="w-full p-2 border rounded dark:bg-[#4C495D] dark:text-white"
-                        />
+                            className="w-full p-2 h-[42px] appearance-none border rounded dark:bg-[#4C495D] dark:text-white"
+                        >
+                            <option value="">Izvēlies kategoriju</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div>
                         <label className="block text-sm font-medium dark:text-white">Pieejamais daudzums</label>
@@ -80,10 +145,9 @@ const ProductPopup = ({ product, onClose, onSave }) => {
                             accept="image/*"
                             onChange={handleFileChange}
                             className="mt-2 w-full"
-                            required
                         />
                         {preview && (
-                            <div className="mt-2">
+                            <div className="mt-2 hidden md:block">
                                 <img src={preview} alt="Preview" className="w-24 h-24 object-cover rounded" />
                             </div>
                         )}
@@ -92,16 +156,25 @@ const ProductPopup = ({ product, onClose, onSave }) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                            className="md:px-4 px-2 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
                         >
                             Atcelt
                         </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                            Saglabāt
-                        </button>
+                        <div>
+                            <button
+                                type="button"
+                                onClick={handleDelete}
+                                className="md:px-4 px-2 py-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
+                            >
+                                Dzēst
+                            </button>
+                            <button
+                                type="submit"
+                                className="md:px-4 px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                                Saglabāt
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

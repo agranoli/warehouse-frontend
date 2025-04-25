@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';  // Import Link for navigation
 import Sidebar from "../CommonUI/Sidebar";
@@ -27,25 +28,41 @@ const EventCalendar = () => {
         'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'
     ];
 
-    // useEffect(() => {
-    //     try {
-    //         if (Array.isArray(eventData)) {
-    //             setEvents(eventData);
-    //         } else {
-    //             throw new Error('Event data is not in the correct format');
-    //         }
-    //     } catch (err) {
-    //         console.error('Error loading event data:', err);
-    //         setError('Failed to load event data. Please check the data format.');
-    //     }
-    // }, []);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await axios.get('/api/events');
+                if (Array.isArray(response.data)) {
+                    setEvents(response.data);
+                } else {
+                    throw new Error('Received data is not in the correct format');
+                }
+            } catch (err) {
+                setError('Neizdevās ielādēt pasākumu datus. Lūdzu, pārbaudiet datu formātu.');
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+    const firstDayOfMonth = (new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay() + 6) % 7;
 
     const getEventColor = (eventId) => {
         const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500'];
         return colors[eventId % colors.length];
+    };
+
+    // Parse yyyy-mm-dd as local date (no timezone conversion)
+    const parseLocalDate = (dateStr) => {
+        const [year, month, day] = dateStr.split('-').map(Number);
+        return new Date(year, month - 1, day);
+    };
+
+    const normalizeDate = (date) => {
+        const newDate = new Date(date);
+        newDate.setHours(0, 0, 0, 0);
+        return newDate;
     };
 
     const isToday = (day) => {
@@ -58,24 +75,38 @@ const EventCalendar = () => {
     };
 
     const renderEventBars = (day) => {
-        const currentDateString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const dayEvents = events.filter(event => {
-            const startDate = new Date(event.from);
-            const endDate = new Date(event.to);
-            const currentDateObj = new Date(currentDateString);
-            return currentDateObj >= startDate && currentDateObj <= endDate;
+        const currentDateObj = normalizeDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+
+        const matchingEvents = events.filter(event => {
+            if (!event.date_from || !event.date_to) return false;
+            const startDate = normalizeDate(parseLocalDate(event.date_from));
+            const endDate = normalizeDate(parseLocalDate(event.date_to));
+
+            const isInRange = currentDateObj >= startDate && currentDateObj <= endDate;
+
+            return isInRange;
         });
 
-        // return dayEvents.map((event, index) => (
-        //     <Link  // Wrap event in Link to navigate to EventDetails
-        //         to={`/event/${event.id}`}  // Navigate to EventDetails page by event id
-        //         key={`${event.id}-${index}`}
-        //         className={`absolute left-0 right-0 h-5 ${getEventColor(event.id)} text-xs text-white truncate px-1`}
-        //         style={{ top: `${index * 20 + 25}px` }}
-        //     >
-        //         {event.name}
-        //     </Link>
-        // ));
+        return matchingEvents.map((event, index) => {
+            const barColor = `hsl(${event.id * 37 % 360}, 70%, 60%)`;
+
+            return (
+                <Link
+                    to={`/event/${event.id}`}
+                    key={`${event.id}-${index}`}
+                    className="absolute h-5 text-xs text-white truncate px-1 rounded"
+                    style={{
+                        top: `${index * 20 + 24}px`,
+                        left: `0`,
+                        right: `0`,
+                        width: '100%',
+                        backgroundColor: barColor
+                    }}
+                >
+                    {event.name || 'Nezināms pasākums'}
+                </Link>
+            );
+        });
     };
 
     const changeMonth = (increment) => {
@@ -99,7 +130,7 @@ const EventCalendar = () => {
     }
 
     return (
-        <div className={`flex min-h-screen ${currentModeStyles.background}`}>
+        <div className={`flex min-h-screen overflow:visible md:overflow-hidden ${currentModeStyles.background}`}>
             <Sidebar isDarkMode={isDarkMode} toggleMode={() => setIsDarkMode(!isDarkMode)} />
             <div className={`flex flex-col flex-grow ${currentModeStyles.background} mt-16 md:ml-64`}>
                 <div className="p-4">
@@ -142,7 +173,7 @@ const EventCalendar = () => {
                         </div>
                     </div>
                     <div className="grid grid-cols-7 gap-px bg-gray-600">
-                        {['Sv', 'P', 'O', 'T', 'C', 'Pk', 'S'].map(day => (
+                        {['P', 'O', 'T', 'C', 'Pk', 'S', 'Sv'].map(day => (
                             <div key={day} className={`text-center font-bold ${currentModeStyles.text} ${currentModeStyles.cardBg} p-2`}>
                                 {day}
                             </div>

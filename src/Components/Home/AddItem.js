@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from "../CommonUI/Sidebar";
 import { darkModeStyles, lightModeStyles } from "../utils/Themes";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddItem() {
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -41,11 +43,39 @@ export default function AddItem() {
 
     const currentModeStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
+    const showError = (message) => {
+        toast.error(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: isDarkMode ? "dark" : "light",
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!itemName.trim()) {
+            showError("Lūdzu, ievadiet nosaukumu.");
+            return;
+        }
+        if (!selectedCategory) {
+            showError("Lūdzu, izvēlieties kategoriju.");
+            return;
+        }
+        if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+            showError("Lūdzu, ievadiet derīgu daudzumu.");
+            return;
+        }
+        if (!price || isNaN(price) || Number(price) <= 0) {
+            showError("Lūdzu, ievadiet derīgu cenu.");
+            return;
+        }
         if (!imageFile) {
-            alert("Lūdzu, izvēlieties attēlu.");
+            showError("Lūdzu, izvēlieties attēlu.");
             return;
         }
 
@@ -63,7 +93,15 @@ export default function AddItem() {
                 },
             });
             console.log('Item added successfully:', response.data);
-
+            toast.success("Prece veiksmīgi pievienota!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: isDarkMode ? "dark" : "light",
+            });
             // Clear the form fields on success
             setItemName('');
             setSelectedCategory('');
@@ -83,7 +121,7 @@ export default function AddItem() {
         if (file && file.type.startsWith('image/')) {
             setImageFile(file);
         } else {
-            alert("Lūdzu, izvēlieties derīgu attēla failu.");
+            showError("Lūdzu, izvēlieties derīgu attēla failu.");
             setImageFile(null);
         }
     };
@@ -92,6 +130,7 @@ export default function AddItem() {
     const imagePreviewUrl = imageFile ? URL.createObjectURL(imageFile) : '';
 
     return (
+        <>
         <div className={`flex min-h-screen ${currentModeStyles.background}`}>
             <Sidebar toggleMode={toggleMode} isDarkMode={isDarkMode} />
             <div className="flex flex-col flex-grow mt-16 md:ml-64">
@@ -109,8 +148,7 @@ export default function AddItem() {
                                 id="nosaukums"
                                 value={itemName}
                                 onChange={(e) => setItemName(e.target.value)}
-                                className={`w-full px-3 py-2 border ${currentModeStyles.border} ${currentModeStyles.text} rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                required
+                                className={`w-full px-3 py-2 border ${currentModeStyles.border} placeholder:text-black rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -122,8 +160,7 @@ export default function AddItem() {
                                     id="kategorija"
                                     value={selectedCategory}
                                     onChange={(e) => setSelectedCategory(e.target.value)}
-                                    className={`w-full px-3 py-2 border ${currentModeStyles.border} ${currentModeStyles.text} rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                    required
+                                    className={`w-full px-3 py-4 border ${currentModeStyles.border} h-[42px] text-black rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 >
                                     <option value="">Izvēlēties kategoriju</option>
                                     {categories.map((category) => (
@@ -142,8 +179,7 @@ export default function AddItem() {
                                     id="daudzums"
                                     value={quantity}
                                     onChange={(e) => setQuantity(e.target.value)}
-                                    className={`w-full px-3 py-2 border ${currentModeStyles.border} ${currentModeStyles.text} rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                    required
+                                    className={`w-full px-3 py-2 border ${currentModeStyles.border} text-black rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -155,8 +191,7 @@ export default function AddItem() {
                                     id="cena"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
-                                    className={`w-full px-3 py-2 border ${currentModeStyles.border} ${currentModeStyles.text} rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                    required
+                                    className={`w-full px-3 py-2 border ${currentModeStyles.border} text-black rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -167,8 +202,7 @@ export default function AddItem() {
                                     type="file"
                                     accept="image/*"
                                     onChange={handleImageChange}
-                                    className={`w-full rounded-sm border ${currentModeStyles.border} ${currentModeStyles.text} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                    required
+                                    className={`w-full px-3 py-[5px] border ${currentModeStyles.border} text-black rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
                             </div>
                         </div>
@@ -188,5 +222,7 @@ export default function AddItem() {
                 </div>
             </div>
         </div>
+        <ToastContainer />
+        </>
     );
 }
